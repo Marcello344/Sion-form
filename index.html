@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Реєстрація в молодіжний табір "СІОН"</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Rubik', sans-serif;
+      background: linear-gradient(to right, #2b5876, #4e4376);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      background-color: rgba(0,0,0,0.6);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #00c853;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #00e676;
+    }
+    .note {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #cfcfcf;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Реєстрація в молодіжний табір "СІОН"</h2>
+    <form id="campForm">
+      <label for="name">Прізвище та ім’я:</label>
+      <input type="text" id="name" required />
+
+      <label for="gender">Стать:</label>
+      <select id="gender" required>
+        <option value="">Оберіть</option>
+        <option value="Чоловіча">Чоловіча</option>
+        <option value="Жіноча">Жіноча</option>
+      </select>
+
+      <label for="phone">Номер телефону:</label>
+      <input type="tel" id="phone" placeholder="+380..." required />
+
+      <button type="submit">Надіслати</button>
+    </form>
+    <div class="note">
+      Після реєстрації вас буде додано до Telegram-групи<br>
+      <strong>Молодіжний табір "СІОН" 2025</strong>.
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("campForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const gender = document.getElementById("gender").value;
+      const phone = document.getElementById("phone").value;
+
+      const message = `📩 Нова заявка на табір СІОН:\n👤 Ім’я: ${name}\n🚻 Стать: ${gender}\n📱 Телефон: ${phone}`;
+      const token = "8149614133:AAF5nnWpYmnS3OaWoRA1d5mW4r0Je9f_WnU";
+      const chat_id = "5347290195";
+
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id, text: message })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.ok) {
+          alert("✅ Заявка надіслана!");
+          document.getElementById("campForm").reset();
+        } else {
+          alert("❌ Помилка: " + data.description);
+        }
+      })
+      .catch(error => {
+        alert("⚠️ Не вдалося надіслати.");
+        console.error("Telegram Error:", error);
+      });
+    });
+  </script>
+</body>
+</html>
